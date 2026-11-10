@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adidas Store - Categoría Ropa</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #FFF0F5; color: #4A4A4A; display: flex; flex-direction: column; min-height: 100vh; }
+        a { text-decoration: none; }
+
+        /* ENCABEZADO CON TÍTULO CENTRADO */
+        header {
+            background-color: #F8C8DC;
+            padding: 25px 5%;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(216, 112, 147, 0.2);
+        }
+        header h1 { grid-column: 2; color: #6B4C57; font-size: 32px; letter-spacing: 3px; text-align: center; font-weight: 800; }
+        .header-btn-container { grid-column: 3; justify-self: end; }
+        .btn-carrito {
+            background-color: #6B4C57; color: white; border: none; padding: 10px 22px; font-size: 14px;
+            font-weight: bold; border-radius: 25px; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-carrito:hover { background-color: #523942; transform: translateY(-2px); }
+
+        /* BARRA DE NAVEGACIÓN UNIFORME */
+        nav {
+            background-color: #ffffff; display: flex; justify-content: center; gap: 15px; padding: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); margin-bottom: 35px;
+        }
+        .nav-link { padding: 10px 25px; border-radius: 20px; color: #6B4C57; font-weight: bold; font-size: 14px; transition: all 0.3s ease; }
+        .nav-link.active { background-color: #F8C8DC; }
+        .nav-link:hover { background-color: #FFF0F5; color: #D87093; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; flex: 1; }
+        .titulo-seccion { text-align: center; color: #D87093; font-size: 28px; margin-bottom: 30px; }
+
+        /* GRILLA CONFIGURADA EXACTAMENTE DE 5 EN 5 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .product-card {
+            background-color: #FFFFFF;
+            border: 2px solid #F3D1DC;
+            border-radius: 14px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 10px 20px rgba(216, 112, 147, 0.2); }
+        .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .product-card h4 { color: #6B4C57; font-size: 14px; margin-bottom: 6px; }
+        .product-card .price { color: #B56576; font-weight: bold; font-size: 15px; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.55); backdrop-filter: blur(5px); z-index: 1000;
+        }
+        .modal-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: #FFFFFF; padding: 30px; border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25); width: 90%; max-width: 550px;
+        }
+        .modal-overlay:target { display: block; }
+        .modal-body { display: flex; gap: 20px; align-items: center; }
+        .modal-body img { width: 180px; height: 170px; object-fit: cover; border-radius: 10px; border: 2px solid #F3D1DC; }
+        .modal-info { flex: 1; text-align: left; }
+        .modal-info h2 { color: #D87093; font-size: 20px; margin-bottom: 10px; }
+        .modal-info p { color: #6B4C57; font-size: 14px; line-height: 1.5; margin-bottom: 18px; }
+        .btn-add {
+            background-color: #28a745; color: white; border: none; padding: 12px 18px;
+            font-weight: bold; cursor: pointer; border-radius: 8px; width: 100%; font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        .btn-add:hover { background-color: #218838; }
+        .btn-close { float: right; color: #dc3545; font-weight: bold; font-size: 14px; }
+
+        footer {
+            background-color: #F8C8DC; text-align: center; padding: 20px; color: #6B4C57;
+            font-weight: bold; margin-top: 50px; font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div></div>
+        <h1>ADIDAS STORE</h1>
+        <div class="header-btn-container">
+            <a href="carrito.php"><button class="btn-carrito">Ver Carrito</button></a>
+        </div>
+    </header>
+
+    <nav>
+        <a href="index.php" class="nav-link">INICIO</a>
+        <a href="calzado.html" class="nav-link">CALZADO</a>
+        <a href="ropa.html" class="nav-link active">ROPA</a>
+        <a href="index.php#modal-cuenta" class="nav-link">MI CUENTA</a>
+    </nav>
+
+    <div class="container">
+        <h2 class="titulo-seccion">Catálogo de Ropa</h2>
+
+        <!-- LOS 10 PRODUCTOS EN 2 FILAS DE 5 -->
+        <div class="products-grid">
+            <a href="#detalles-azul">
+                <div class="product-card">
+                    <img src="azul.webp">
+                    <h4>Chamarra Track Azul</h4>
+                    <span class="price">$1,799.00</span>
+                </div>
+            </a>
+            <a href="#detalles-camisa">
+                <div class="product-card">
+                    <img src="camisa.jpg">
+                    <h4>Playera Oversized</h4>
+                    <span class="price">$799.00</span>
+                </div>
+            </a>
+            <a href="#detalles-cd">
+                <div class="product-card">
+                    <img src="cd.jpg">
+                    <h4>Conjunto Top & Pants</h4>
+                    <span class="price">$2,499.00</span>
+                </div>
+            </a>
+            <a href="#detalles-conjunto">
+                <div class="product-card">
+                    <img src="conjunto.webp">
+                    <h4>Conjunto Azul Track</h4>
+                    <span class="price">$2,699.00</span>
+                </div>
+            </a>
+            <a href="#detalles-guinda">
+                <div class="product-card">
+                    <img src="guinda.webp">
+                    <h4>Chamarra Guinda</h4>
+                    <span class="price">$2,599.00</span>
+                </div>
+            </a>
+            <a href="#detalles-negra">
+                <div class="product-card">
+                    <img src="negra.avif">
+                    <h4>Track Jacket Negra</h4>
+                    <span class="price">$1,799.00</span>
+                </div>
+            </a>
+            <a href="#detalles-rojo">
+                <div class="product-card">
+                    <img src="rojo.jpg">
+                    <h4>Tracksuit Rojo</h4>
+                    <span class="price">$2,499.00</span>
+                </div>
+            </a>
+            <a href="#detalles-sudadera">
+                <div class="product-card">
+                    <img src="sudaderaazul.avif">
+                    <h4>Sudadera Cozy Azul</h4>
+                    <span class="price">$1,599.00</span>
+                </div>
+            </a>
+            <a href="#detalles-firebird">
+                <div class="product-card">
+                    <img src="pants.avif">
+                    <h4>Pants Firebird Pink</h4>
+                    <span class="price">$1,399.00</span>
+                </div>
+            </a>
+            <a href="#detalles-adicolor">
+                <div class="product-card">
+                    <img src="top.jpg">
+                    <h4>Top Adicolor Rose</h4>
+                    <span class="price">$899.00</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- MODALES FLOTANTES INDIVIDUALES -->
+    <div id="detalles-azul" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="azul.webp">
+                <div class="modal-info">
+                    <h2>Chamarra Track Jacket Azul</h2>
+                    <p><b>Precio:</b> $1,799.00 MXN<br><br>Chamarra estilo vintage de cuello alto con cierre completo y franjas laterales.</p>
+                    <a href="carrito.php?action=add&producto=Chamarra+Track+Azul&precio=1799&img=azul.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-camisa" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="camisa.jpg">
+                <div class="modal-info">
+                    <h2>Playera Oversized Trefoil</h2>
+                    <p><b>Precio:</b> $799.00 MXN<br><br>Camiseta holgada de algodón con el logotipo Trefoil minimalista al centro.</p>
+                    <a href="carrito.php?action=add&producto=Playera+Oversized&precio=799&img=camisa.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-cd" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="cd.jpg">
+                <div class="modal-info">
+                    <h2>Conjunto Top & Pants Navy</h2>
+                    <p><b>Precio:</b> $2,499.00 MXN<br><br>Set deportivo de dos piezas en azul marino con detalles blancos en contraste.</p>
+                    <a href="carrito.php?action=add&producto=Conjunto+Top+Pants&precio=2499&img=cd.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-conjunto" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="conjunto.webp">
+                <div class="modal-info">
+                    <h2>Conjunto Azul Track</h2>
+                    <p><b>Precio:</b> $2,699.00 MXN<br><br>Traje de entrenamiento completo con chamarra y jogger térmico.</p>
+                    <a href="carrito.php?action=add&producto=Conjunto+Azul+Track&precio=2699&img=conjunto.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-guinda" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="guinda.webp">
+                <div class="modal-info">
+                    <h2>Chamarra Guinda Vintage</h2>
+                    <p><b>Precio:</b> $2,599.00 MXN<br><br>Edición especial tono guinda pastel con detalles retro y corte holgado.</p>
+                    <a href="carrito.php?action=add&producto=Chamarra+Guinda+Vintage&precio=2599&img=guinda.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-negra" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="negra.avif">
+                <div class="modal-info">
+                    <h2>Track Jacket Negra</h2>
+                    <p><b>Precio:</b> $1,799.00 MXN<br><br>La chamarra negra atemporal con cuello alto y las tres franjas en mangas.</p>
+                    <a href="carrito.php?action=add&producto=Track+Jacket+Negra&precio=1799&img=negra.avif"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-rojo" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="rojo.jpg">
+                <div class="modal-info">
+                    <h2>Conjunto Tracksuit Rojo</h2>
+                    <p><b>Precio:</b> $2,499.00 MXN<br><br>Conjunto clásico en color rojo intenso con vivos blancos de alta visibilidad.</p>
+                    <a href="carrito.php?action=add&producto=Tracksuit+Rojo&precio=2499&img=rojo.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-sudadera" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="sudaderaazul.avif">
+                <div class="modal-info">
+                    <h2>Sudadera Cozy Fleece Azul</h2>
+                    <p><b>Precio:</b> $1,599.00 MXN<br><br>Sudadera de felpa suave en azul pastel con cuello con medio cierre.</p>
+                    <a href="carrito.php?action=add&producto=Sudadera+Cozy+Azul&precio=1599&img=sudaderaazul.avif"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-firebird" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="pants.avif">
+                <div class="modal-info">
+                    <h2>Pants Firebird Pink</h2>
+                    <p><b>Precio:</b> $1,399.00 MXN<br><br>Pantalón de chándal corte recto con cintura elástica ajustables.</p>
+                    <a href="carrito.php?action=add&producto=Pants+Firebird+Pink&precio=1399&img=guinda.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-adicolor" class="modal-overlay">
+        <div class="modal-content">
+            <a href="ropa.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="top.jpg">
+                <div class="modal-info">
+                    <h2>Top Deportivo Adicolor Rose</h2>
+                    <p><b>Precio:</b> $899.00 MXN<br><br>Top corto elástico con espalda deportiva y soporte de impacto medio.</p>
+                    <a href="carrito.php?action=add&producto=Top+Adicolor+Rose&precio=899&img=cd.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Vazquez Hernandez Eliana Karime- 0908- 5J
+    </footer>
+
+</body>
+</html>

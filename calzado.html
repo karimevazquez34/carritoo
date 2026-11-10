@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adidas Store - Categoría Calzado</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #FFF0F5; color: #4A4A4A; display: flex; flex-direction: column; min-height: 100vh; }
+        a { text-decoration: none; }
+
+        header {
+            background-color: #F8C8DC;
+            padding: 25px 5%;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(216, 112, 147, 0.2);
+        }
+        header h1 { grid-column: 2; color: #6B4C57; font-size: 32px; letter-spacing: 3px; text-align: center; font-weight: 800; }
+        .header-btn-container { grid-column: 3; justify-self: end; }
+        .btn-carrito {
+            background-color: #6B4C57; color: white; border: none; padding: 10px 22px; font-size: 14px;
+            font-weight: bold; border-radius: 25px; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-carrito:hover { background-color: #523942; transform: translateY(-2px); }
+
+        nav {
+            background-color: #ffffff; display: flex; justify-content: center; gap: 15px; padding: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); margin-bottom: 35px;
+        }
+        .nav-link { padding: 10px 25px; border-radius: 20px; color: #6B4C57; font-weight: bold; font-size: 14px; transition: all 0.3s ease; }
+        .nav-link.active { background-color: #F8C8DC; }
+        .nav-link:hover { background-color: #FFF0F5; color: #D87093; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; flex: 1; }
+        .titulo-seccion { text-align: center; color: #D87093; font-size: 28px; margin-bottom: 30px; }
+
+        /* GRILLA CONFIGURADA EXACTAMENTE DE 5 EN 5 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .product-card {
+            background-color: #FFFFFF;
+            border: 2px solid #F3D1DC;
+            border-radius: 14px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 10px 20px rgba(216, 112, 147, 0.2); }
+        .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .product-card h4 { color: #6B4C57; font-size: 14px; margin-bottom: 6px; }
+        .product-card .price { color: #B56576; font-weight: bold; font-size: 15px; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.55); backdrop-filter: blur(5px); z-index: 1000;
+        }
+        .modal-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: #FFFFFF; padding: 30px; border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25); width: 90%; max-width: 550px;
+        }
+        .modal-overlay:target { display: block; }
+        .modal-body { display: flex; gap: 20px; align-items: center; }
+        .modal-body img { width: 180px; height: 170px; object-fit: cover; border-radius: 10px; border: 2px solid #F3D1DC; }
+        .modal-info { flex: 1; text-align: left; }
+        .modal-info h2 { color: #D87093; font-size: 20px; margin-bottom: 10px; }
+        .modal-info p { color: #6B4C57; font-size: 14px; line-height: 1.5; margin-bottom: 18px; }
+        .btn-add {
+            background-color: #28a745; color: white; border: none; padding: 12px 18px;
+            font-weight: bold; cursor: pointer; border-radius: 8px; width: 100%; font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        .btn-add:hover { background-color: #218838; }
+        .btn-close { float: right; color: #dc3545; font-weight: bold; font-size: 14px; }
+
+        footer {
+            background-color: #F8C8DC; text-align: center; padding: 20px; color: #6B4C57;
+            font-weight: bold; margin-top: 50px; font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div></div>
+        <h1>ADIDAS STORE</h1>
+        <div class="header-btn-container">
+            <a href="carrito.php"><button class="btn-carrito">Ver Carrito</button></a>
+        </div>
+    </header>
+
+    <nav>
+        <a href="index.php" class="nav-link">INICIO</a>
+        <a href="calzado.html" class="nav-link active">CALZADO</a>
+        <a href="ropa.html" class="nav-link">ROPA</a>
+        <a href="index.php#modal-cuenta" class="nav-link">MI CUENTA</a>
+    </nav>
+
+    <div class="container">
+        <h2 class="titulo-seccion">Catálogo de Calzado</h2>
+
+        <div class="products-grid">
+            <a href="#detalles-samba">
+                <div class="product-card">
+                    <img src="adidas.webp">
+                    <h4>Adidas Samba OG Pink</h4>
+                    <span class="price">$2,199.00</span>
+                </div>
+            </a>
+            <a href="#detalles-gazelle">
+                <div class="product-card">
+                    <img src="gazelle.jpg">
+                    <h4>Gazelle Bold Mint</h4>
+                    <span class="price">$2,399.00</span>
+                </div>
+            </a>
+            <a href="#detalles-ultraboost">
+                <div class="product-card">
+                    <img src="ultraboost.avif">
+                    <h4>Ultraboost 1.0 White</h4>
+                    <span class="price">$3,499.00</span>
+                </div>
+            </a>
+            <a href="#detalles-campus">
+                <div class="product-card">
+                    <img src="campus.jpg">
+                    <h4>Campus 00s Pink</h4>
+                    <span class="price">$2,299.00</span>
+                </div>
+            </a>
+            <a href="#detalles-forum">
+                <div class="product-card">
+                    <img src="forum.avif">
+                    <h4>Forum Low White</h4>
+                    <span class="price">$2,199.00</span>
+                </div>
+            </a>
+            <a href="#detalles-superstar">
+                <div class="product-card">
+                    <img src="superstar.avif">
+                    <h4>Superstar XLG Black</h4>
+                    <span class="price">$2,099.00</span>
+                </div>
+            </a>
+            <a href="#detalles-stansmith">
+                <div class="product-card">
+                    <img src="stansmith.jpg">
+                    <h4>Stan Smith Heart</h4>
+                    <span class="price">$1,999.00</span>
+                </div>
+            </a>
+            <a href="#detalles-aquaslides">
+                <div class="product-card">
+                    <img src="aquaslides.jpg">
+                    <h4>Adilette Slides Pink</h4>
+                    <span class="price">$899.00</span>
+                </div>
+            </a>
+            <a href="#detalles-spezial">
+                <div class="product-card">
+                    <img src="spezial.webp">
+                    <h4>Spezial Pink Pastel</h4>
+                    <span class="price">$2,299.00</span>
+                </div>
+            </a>
+            <a href="#detalles-astir">
+                <div class="product-card">
+                    <img src="astir.jpg">
+                    <h4>Astir Soft Pink</h4>
+                    <span class="price">$2,499.00</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- MODALES FLOTANTES -->
+    <div id="detalles-samba" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="adidas.webp">
+                <div class="modal-info">
+                    <h2>Adidas Samba OG Pink</h2>
+                    <p><b>Precio:</b> $2,199.00 MXN<br><br>Silueta clásica de piel en tono rosa pastel con las icónicas tres franjas en contraste.</p>
+                    <a href="carrito.php?action=add&producto=Adidas+Samba+OG+Pink&precio=2199&img=adidas.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-gazelle" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="gazelle.jpg">
+                <div class="modal-info">
+                    <h2>Adidas Gazelle Bold</h2>
+                    <p><b>Precio:</b> $2,399.00 MXN<br><br>Diseño clásico reinventado con una triple suela de plataforma.</p>
+                    <a href="carrito.php?action=add&producto=Gazelle+Bold+Mint&precio=2399&img=gazelle.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-ultraboost" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="ultraboost.avif">
+                <div class="modal-info">
+                    <h2>Adidas Ultraboost 1.0 White</h2>
+                    <p><b>Precio:</b> $3,499.00 MXN<br><br>Amortiguación superior con tecnología Boost y tejido transpirable Primeknit.</p>
+                    <a href="carrito.php?action=add&producto=Ultraboost+1.0+White&precio=3499&img=ultraboost.avif"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-campus" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="campus.jpg">
+                <div class="modal-info">
+                    <h2>Adidas Campus 00s Pink</h2>
+                    <p><b>Precio:</b> $2,299.00 MXN<br><br>Estilo skater noventero con agujetas anchas y silueta robusta en gamuza rosa.</p>
+                    <a href="carrito.php?action=add&producto=Campus+00s+Pink&precio=2299&img=campus.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-forum" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="forum.avif">
+                <div class="modal-info">
+                    <h2>Adidas Forum Low White</h2>
+                    <p><b>Precio:</b> $2,199.00 MXN<br><br>Silueta retro de baloncesto con correa de tobillo distintiva y acabados premium.</p>
+                    <a href="carrito.php?action=add&producto=Forum+Low+White&precio=2199&img=forum.avif"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-superstar" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="superstar.avif">
+                <div class="modal-info">
+                    <h2>Adidas Superstar XLG Black</h2>
+                    <p><b>Precio:</b> $2,099.00 MXN<br><br>La clásica puntera de concha con una mediasuela sobredimensionada.</p>
+                    <a href="carrito.php?action=add&producto=Superstar+XLG+Black&precio=2099&img=superstar.avif"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-stansmith" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="stansmith.jpg">
+                <div class="modal-info">
+                    <h2>Stan Smith Valentine Heart</h2>
+                    <p><b>Precio:</b> $1,999.00 MXN<br><br>Diseño minimalista blanco con detalle de corazón bordado en el talón.</p>
+                    <a href="carrito.php?action=add&producto=Stan+Smith+Heart&precio=1999&img=stansmith.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-aquaslides" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="aquaslides.jpg">
+                <div class="modal-info">
+                    <h2>Adilette Aqua Slides Pink</h2>
+                    <p><b>Precio:</b> $899.00 MXN<br><br>Sandalias ligeras de una sola pieza ideales para descanso o piscina.</p>
+                    <a href="carrito.php?action=add&producto=Adilette+Slides+Pink&precio=899&img=aquaslides.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-spezial" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="spezial.webp">
+                <div class="modal-info">
+                    <h2>Spezial Pink Pastel</h2>
+                    <p><b>Precio:</b> $2,299.00 MXN<br><br>Silueta clásica de balonmano en ante suave tono rosa y suela caramelo.</p>
+                    <a href="carrito.php?action=add&producto=Spezial+Pink+Pastel&precio=2299&img=adidas.webp"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detalles-astir" class="modal-overlay">
+        <div class="modal-content">
+            <a href="calzado.html" class="btn-close">Cerrar [X]</a>
+            <div class="modal-body">
+                <img src="astir.jpg">
+                <div class="modal-info">
+                    <h2>Astir Soft Pink</h2>
+                    <p><b>Precio:</b> $2,499.00 MXN<br><br>Tenis de silueta chunky inspirados en la moda running de los años 2000.</p>
+                    <a href="carrito.php?action=add&producto=Astir+Soft+Pink&precio=2499&img=campus.jpg"><button class="btn-add">AÑADIR AL CARRITO</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Vazquez Hernandez Eliana Karime- 0908- 5J
+    </footer>
+
+</body>
+</html>
